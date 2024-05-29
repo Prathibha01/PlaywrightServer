@@ -91,54 +91,10 @@ const updateExecutionStatus = async (executionId, status) => {
 };
 
 // API endpoint to run the Playwright script
-// app.post('/execute-playwright-script', async (req, res) => {
-//   const selectedScript = req.body.selectedScript;
-
-//   if (!selectedScript) {
-//     res.status(400).send('No script selected.');
-//     return res.status(400).json({ success: false, error: 'No script selected.' });
-//   }
-
-//   try {
-//     // Insert a new row with status "Started"
-//     const insertResult = await insertExecutionProgress(selectedScript, 'Started');
-//     const executionId = insertResult.data[0].id;
-
-//     //notify the frontend
-//     // Update the status to "In Progress"
-//     await updateExecutionStatus(executionId, 'In Progress');
-
-//     // Construct the command to run the selected script
-//     const command = `npx playwright test ${selectedScript}`;
-
-//     const childProcess = exec(command, async (error, stdout, stderr) => {
-//       // Update the row's status based on the outcome
-//       const status = error ? 'Failed' : 'Passed';
-//       await updateExecutionStatus(executionId, status);
-
-//       if (error) {
-//         console.error(`Error executing Playwright script: ${error}`);
-//         return res.status(500).send('Internal Server Error');
-//       } else {
-//         console.log(`Playwright script executed successfully:\n${stdout}`);
-//         return res.status(200).send('Playwright script executed successfully');
-//       }
-//     });
-
-//     childProcess.stderr.on('data', (data) => {
-//       console.error(`stderr: ${data}`);
-//     });
-//   } catch (error) {
-//     console.error('Error communicating with the database:', error);
-//     return res.status(500).json({ success: false, error: 'Internal Server Error' });
-//   }
-// });
-
-// API endpoint to run the Playwright script
 app.post('/execute-playwright-script', async (req, res) => {
   const selectedScript = req.body.selectedScript;
 
-  if (!selectedScript) {
+  if (!selectedScript) {  //change this into array 
     res.status(400).send('No script selected.');
     return res.status(400).json({ success: false, error: 'No script selected.' });
   }
@@ -157,6 +113,7 @@ app.post('/execute-playwright-script', async (req, res) => {
 
     // Construct the command to run the selected script
     const command = `npx playwright test ${selectedScript}`;
+    //const command = `npm test ${selectedScript}`;
 
     const childProcess = exec(command, async (error, stdout, stderr) => {
       // Update the row's status based on the outcome
@@ -231,12 +188,26 @@ app.get('/get-execution-status/:uuid', async (req, res) => {
   }
 });
 
-// Utility function to get the status of a specific execution
+//Utility function to get the status of a specific execution
 const getExecutionStatusByUuid = async (executionId) => {
-  const query = 'SELECT status FROM Execution_Progress WHERE id = $1';
+  const query = 'SELECT script_name, started_at, status FROM Execution_Progress WHERE id = $1';
   const values = [executionId];
   return await executeQuery(query, values);
 };
+
+// const getExecutionStatusByUuid = async (executionId) => {
+//   const query = 'SELECT status FROM Execution_Progress WHERE id = $1 AND status = $2';
+//   const values = [executionId, 'In Progress'];
+
+//   try {
+//     const result = await pool.query(query, values);
+//     return result.rows.length > 0 ? result.rows[0].status : null;
+//   } catch (error) {
+//     console.error('Error fetching execution status by UUID:', error);
+//     throw error;
+//   }
+// };
+
 
 // Serve HTML reports from the 'playwright-reports' directory
 app.use('/playwright-report', express.static('playwright-report'));

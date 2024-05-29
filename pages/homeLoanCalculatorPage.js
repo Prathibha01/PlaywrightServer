@@ -16,8 +16,6 @@ class homeLoanCalculatorPage{
         return await this.page.textContent('span#borrowResultTextAmount');
        
     }
-
-      
+     
 }
-
 export default homeLoanCalculatorPage;

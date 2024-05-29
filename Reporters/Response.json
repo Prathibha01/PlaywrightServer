@@ -1,0 +1,13 @@
+{
+  "ID": "65a02b658885c200018ae933",
+  "updated_at": "2024-01-11T17:54:45.35950842Z",
+  "created_at": "2024-01-11T17:54:45.359508243Z",
+  "user_id": "65390490dbf7a500082d18fd",
+  "external_id": "SF_TEST001",
+  "name": "San Francisco Test Station",
+  "latitude": 37.76,
+  "longitude": -122.43,
+  "altitude": 150,
+  "rank": 10,
+  "source_type": 5
+}
